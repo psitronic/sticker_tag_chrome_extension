@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+
+  "name": "Stickers",
+  "description": "Allow you to leave stickers for your friend on webpages.",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "ladybug.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ]
+}
