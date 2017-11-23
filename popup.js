@@ -11,7 +11,6 @@ function getCurrentTabUrl(callback) {
     var tab = tabs[0];
 
     var url = tab.url;
-    console.assert(typeof url == 'string', 'tab.url should be a string');
     console.log(url);
 
     callback(url);
@@ -30,23 +29,48 @@ function getCurrentTabTitle(callback) {
     var tab = tabs[0];
 
     var title = tab.title;
-    console.assert(typeof title == 'string', 'tab.title should be a string');
     console.log(title);
 
     callback(title);
   });
 }
 
+function saveNote(url,text) {
+    var items = {};
+    items[url] = text;
+    chrome.storage.sync.set(items);
+}
+
+function readNote(url, callback) {
+    chrome.storage.sync.get(url, (items) => {
+        callback(chrome.runtime.lastError ? null : items[url])
+    })
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   getCurrentTabUrl((url) => {
+      
     var urlElement = document.getElementById('link');
+    var textarea = document.getElementById('note');
       
     urlElement.innerHTML = url;
+
+    
+    readNote(url, (savedNote) => {
+        if (savedNote) {
+            textarea.innerHTML = savedNote;
+        }
+    });
+    
+      textarea.addEventListener("change", () => {
+        console.log(textarea.value);
+        saveNote(url,textarea.value);
+    });
   });
+    
   getCurrentTabTitle((title) => {
     var titelElement = document.getElementById('titel');
       
     titelElement.innerHTML = title;
   });
-
 });
